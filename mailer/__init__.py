@@ -28,7 +28,8 @@ PRIORITY_MAPPING = {
 
 
 def send_mail(subject, message, from_email, recipient_list, priority="medium",
-              fail_silently=False, auth_user=None, auth_password=None):
+              fail_silently=False, auth_user=None, auth_password=None, 
+              headers=None):
     from django.utils.encoding import force_unicode
     from mailer.models import make_message
     
@@ -42,13 +43,14 @@ def send_mail(subject, message, from_email, recipient_list, priority="medium",
                  body=message,
                  from_email=from_email,
                  to=recipient_list,
+                 headers=headers,
                  priority=priority).save()
     return 1
 
 
 def send_html_mail(subject, message, message_html, from_email, recipient_list,
                    priority="medium", fail_silently=False, auth_user=None,
-                   auth_password=None):
+                   auth_password=None, headers=None):
     """
     Function to queue HTML e-mails
     """
@@ -66,6 +68,7 @@ def send_html_mail(subject, message, message_html, from_email, recipient_list,
                        body=message,
                        from_email=from_email,
                        to=recipient_list,
+                       headers=headers,
                        priority=priority)
     email = msg.email
     email = EmailMultiAlternatives(email.subject, email.body, email.from_email, email.to)
@@ -76,11 +79,11 @@ def send_html_mail(subject, message, message_html, from_email, recipient_list,
 
 
 def send_mass_mail(datatuple, fail_silently=False, auth_user=None,
-                   auth_password=None, connection=None):
+                   auth_password=None, connection=None, headers=None):
     from mailer.models import make_message
     num_sent = 0
     for subject, message, sender, recipient in datatuple:
-        num_sent += send_mail(subject, message, sender, recipient)
+        num_sent += send_mail(subject, message, sender, recipient, headers=headers)
     return num_sent
 
 
