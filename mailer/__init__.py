@@ -71,7 +71,7 @@ def send_html_mail(subject, message, message_html, from_email, recipient_list,
                        headers=headers,
                        priority=priority)
     email = msg.email
-    email = EmailMultiAlternatives(email.subject, email.body, email.from_email, email.to)
+    email = EmailMultiAlternatives(email.subject, email.body, email.from_email, email.to, headers=headers)
     email.attach_alternative(message_html, "text/html")
     msg.email = email
     msg.save()
